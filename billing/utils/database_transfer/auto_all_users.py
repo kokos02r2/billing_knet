@@ -50,4 +50,4 @@ def create_user_from_csv(csv_filepath):
 
 
 if __name__ == '__main__':
-    create_user_from_csv('utils/database_transfer/users_utf.csv')
+    create_user_from_csv('utils/database_transfer/csv/users_utf.csv')

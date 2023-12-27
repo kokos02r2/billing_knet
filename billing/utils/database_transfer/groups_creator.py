@@ -32,4 +32,4 @@ def create_user_from_csv(csv_filepath):
 
 
 if __name__ == '__main__':
-    create_user_from_csv('utils/database_transfer/updated_file_with_positive_balance.csv')
+    create_user_from_csv('utils/database_transfer/csv/updated_file_with_positive_balance.csv')

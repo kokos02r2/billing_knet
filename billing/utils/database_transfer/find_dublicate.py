@@ -19,6 +19,6 @@ def check_unique_login(csv_filepath):
         return duplicates
 
 
-duplicates = check_unique_login('utils/database_transfer/users_utf.csv')
+duplicates = check_unique_login('utils/database_transfer/csv/users_utf.csv')
 
 print(duplicates)
