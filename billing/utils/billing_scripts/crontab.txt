@@ -1,0 +1,1 @@
+01 00 * * * /Users/kokos/Dev/knet_scripts/billing_knet/.venv/bin/python /Users/kokos/Dev/knet_scripts/billing_knet/billing/trust_payment_checker.py >> /Users/kokos/Dev/knet_scripts/billing_knet/billing/logfile.log 2>&1

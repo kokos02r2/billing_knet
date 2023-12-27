@@ -8,6 +8,17 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 django = "4.1"
+psycopg2-binary = "^2.9.9"
+python-dotenv = "^1.0.0"
+pandas = "^2.1.4"
+tqdm = "^4.66.1"
+django-admin-rangefilter = "^0.12.0"
+pytz = "^2023.3.post1"
+routeros-api = "^0.17.0"
+requests = "^2.31.0"
+djoser = "^2.2.2"
+djangorestframework-simplejwt = "^5.3.1"
+djangorestframework = "^3.14.0"
 
 
 [build-system]

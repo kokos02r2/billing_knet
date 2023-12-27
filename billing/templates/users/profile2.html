@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Abonent Profile</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #ff8c00; /* Orange color */
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #ffA500;
+        }
+
+        .profile-container {
+            flex-grow: 1;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+            overflow-y: auto;
+        }
+
+        h2, p {
+            color: #333;
+        }
+
+        .profile-info div {
+            margin-bottom: 10px;
+        }
+
+        .logout-btn {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background-color: #d9534f;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <a href="#home">Главная</a>
+            <a href="#account-replenishment">Пополнение счёта</a>
+            <a href="#billing">Биллинг</a>
+            <a href="#trust-payment">Доверительный платёж</a>
+            <a href="#change-plan">Смена тарифа</a>
+            <a href="#blocking">Блокировка</a>
+        </div>
+        <div class="profile-container">
+            <div id="home">
+                <h2>Abonent Profile</h2>
+                <!-- Content for Главная -->
+            </div>
+            <div id="account-replenishment">
+                <!-- Content for Пополнение счёта -->
+            </div>
+            <div id="billing">
+                <h2>Billing Information</h2>
+                <div>
+                    <!-- Your billing details here -->
+                </div>
+            </div>
+            <div id="trust-payment">
+                <h2>Trust Payment</h2>
+                {% if abonent.credit_check is None and abonent.balance < 0 %}
+                <form method="post" action="{% url 'trust_payment' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="abonent_id" value="{{ abonent.id }}">
+                    <button type="submit">Take Trust Payment</button>
+                </form>
+                {% else %}
+                <p>Trust payment is not available.</p>
+                {% endif %}
+            </div>
+            <!-- Add other sections with corresponding IDs -->
+        </div>
+    </div>
+</body>
+</html>

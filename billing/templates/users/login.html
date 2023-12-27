@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Вход в личный кабинет</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0; /* Light gray background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .login-logo {
+            margin-bottom: 20px;
+        }
+
+        .login-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 18px;
+        }
+
+        .btn {
+          width: 100%;
+          padding: 10px;
+          background-color: #ff8c00; /* Orange color */
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+          transition: background-color 0.2s; /* Smooth transition for hover effect */
+        }
+
+        .btn:hover {
+            background-color: #e67600; /* Slightly darker orange on hover */
+        }
+
+        .error {
+            color: red;
+            margin-top: 15px;
+        }
+        .checkbox-group {
+            display: flex; /* Enable flexbox */
+            align-items: center; /* Center align items vertically */
+            justify-content: flex-start; /* Align content to the start (left) */
+        }
+        
+        .checkbox-group label {
+            margin-left: 8px; /* Space between the checkbox and the label */
+            font-size: 16px; /* Adjust the size as needed */
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            /* You can add styles for your checkbox here */
+        }
+    </style>
+</head>
+{% load static %}
+<body>
+  <div class="login-container">
+      <div class="login-logo">
+          <img src="{% static 'login/img/knet_logo.png' %}" alt="Logo" width="200">
+      </div>
+      <h5>Введите логин и пароль для доступа в личный кабинет</h5>
+      <form method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+          <div class="form-group">
+              <input type="text" name="username" id="id_username" class="form-control" required placeholder="Логин">
+          </div>
+          <div class="form-group">
+              <input type="password" name="password" id="id_password" class="form-control" required placeholder="Пароль">
+          </div>
+          <div class="form-group checkbox-group">
+              <input type="checkbox" name="remember" id="id_remember">
+              <label for="id_remember">Запомнить меня</label>
+          </div>
+          <button type="submit" class="btn">Войти</button>
+          {% if form.errors %}
+              <p class="error">Пожалуйста, попробуйте снова. Вы ввели неправильный логин или пароль.</p>
+          {% endif %}
+      </form>
+  </div>
+</body>
+</html>
