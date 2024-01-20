@@ -29,7 +29,8 @@ class AbonentAdmin(admin.ModelAdmin):
     add_funds_link.short_description = 'Добавить средства'
     list_display = ('login', 'password', 'account_number', 'balance', 'group', 'view_events_link', 'add_funds_link')
     search_fields = ('account_number', 'name')
-    actions = ['show_balance_statistics', 'download_log_file', 'trust_payment']
+    actions = ['show_balance_statistics', 'download_log_file_mikrotik', 'download_log_file_lifestream', 'trust_payment']
+    # list_per_page = 30
 
     def view_events_link(self, obj):
         url = reverse('admin:abonents_userevent_changelist') + f'?abonent__id__exact={obj.pk}'
@@ -49,7 +50,7 @@ class AbonentAdmin(admin.ModelAdmin):
 
     show_balance_statistics.short_description = "Показать статистику балансов"
 
-    def download_log_file(self, request, queryset):
+    def download_log_file_mikrotik(self, request, queryset):
         log_file_path = 'utils/billing_scripts/logs/mikrotik_connection_errors.log'
 
         with open(log_file_path, 'rb') as log_file:
@@ -57,7 +58,17 @@ class AbonentAdmin(admin.ModelAdmin):
             response['Content-Disposition'] = 'attachment; filename="mikrotik_logfile.log"'
             return response
 
-    download_log_file.short_description = "Скачать отчет логов микротика"
+    download_log_file_mikrotik.short_description = "Скачать отчет логов микротика"
+
+    def download_log_file_lifestream(self, request, queryset):
+        log_file_path = 'utils/lifestream/lifestream.log'
+
+        with open(log_file_path, 'rb') as log_file:
+            response = HttpResponse(log_file.read(), content_type="text/plain")
+            response['Content-Disposition'] = 'attachment; filename="lifestream_logfile.log"'
+            return response
+
+    download_log_file_lifestream.short_description = "Скачать отчет логов смотрешки"
 
     def save(self, *args, **kwargs):
         # Если это новый объект и login_mikrotik не задан, установите его равным login

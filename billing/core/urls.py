@@ -28,5 +28,6 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile_tarif/', views.profile_tarif, name='profile_tarif'),
     path('trust_payment/', views.trust_payment, name='trust_payment'),
-    path('api/', include('api.auth.urls')),
+    path('api/auth/', include('api.auth.urls')),
+    path('api/', include('api.v1.urls')),
 ]

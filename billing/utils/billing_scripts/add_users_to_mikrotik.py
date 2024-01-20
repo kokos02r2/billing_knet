@@ -20,7 +20,7 @@ django.setup()
 from apps.abonents.models import Abonent  # noqa
 from apps.groups.models import Group  # noqa
 from utils.billing_scripts.config_servers_mikrotik import LETTERS  # noqa
-from utils.billing_scripts.config_servers_mikrotik import SERVERS
+from utils.billing_scripts.config_servers_mikrotik import SERVERS  # noqa
 from utils.telegram_sender import send_telegram_message  # noqa
 
 load_dotenv()
@@ -199,7 +199,7 @@ if __name__ == '__main__':
                 future.result()
             except Exception as e:
                 error_message = f"Ошибка при добавлении пользователей на сервер {server_name}: {e}"
-                
+
                 # Проверьте, было ли уже залогировано такое же сообщение
                 if not is_message_logged(log_file_path, error_message):
                     logger.error(error_message)
