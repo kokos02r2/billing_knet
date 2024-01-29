@@ -2,10 +2,10 @@ import logging
 import os
 import sys
 from logging.handlers import TimedRotatingFileHandler
-from django.db.models import Prefetch
-import requests
 
 import django
+import requests
+from django.db.models import Prefetch
 from dotenv import load_dotenv
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,8 +19,9 @@ django.setup()
 
 from apps.abonents.models import Abonent  # noqa
 from apps.groups.models import TvIdentifier  # noqa
+from utils.billing_scripts.add_users_to_mikrotik import \
+    is_message_logged  # noqa
 from utils.telegram_sender import send_telegram_message  # noqa
-from utils.billing_scripts.add_users_to_mikrotik import is_message_logged  # noqa
 
 load_dotenv()
 

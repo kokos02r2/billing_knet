@@ -34,12 +34,14 @@ def check_trust_payment():
 
                 for account in accounts:
                     current_date = datetime.now()
+                    current_month = str(datetime.now().month).zfill(2)
                     date_str, amount_str = account.credit.split('x')
                     credit_date = datetime.strptime(date_str, "%d-%m-%Y")
                     credit_amount = Decimal(amount_str)
                     if credit_date.date() <= current_date.date():
                         account.balance -= credit_amount
                         account.credit = ""
+                        account.credit_check = current_month
                         accounts_to_update.append(account)
                         event = UserEvent(
                             abonent=account,
@@ -51,7 +53,7 @@ def check_trust_payment():
                     else:
                         None
                 if accounts_to_update:
-                    Abonent.objects.bulk_update(accounts_to_update, ['balance', 'credit'])
+                    Abonent.objects.bulk_update(accounts_to_update, ['balance', 'credit', 'credit_check'])
                     UserEvent.objects.bulk_create(events_to_create)
                     print(f"Updated {len(accounts_to_update)} accounts and created {len(events_to_create)} events.")
             break

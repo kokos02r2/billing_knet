@@ -1,0 +1,15 @@
+[Unit]
+Description=gunicorn daemon 
+
+After=network.target 
+
+[Service]
+User=root
+
+WorkingDirectory=/root/billing_knet/billing/
+
+ExecStart=/root/.cache/pypoetry/virtualenvs/billing-knet-4t6T0mqn-py3.10/bin/gunicorn --bind 127.0.0.1:8000 core.wsgi:application
+
+[Install]
+# группировка юнитов 
+WantedBy=multi-user.target

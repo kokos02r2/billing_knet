@@ -1,15 +1,15 @@
-from django.contrib import admin
 import calendar
+from datetime import datetime, timedelta
+
+from django.contrib import admin, messages
+from django.db import transaction
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.html import format_html
-from django.http import HttpResponseRedirect
-from .models import Abonent, UserEvent
 from rangefilter.filters import DateRangeFilter
-from django.http import HttpResponse
-from django.db import transaction
-from datetime import datetime, timedelta
-from django.contrib import messages
+
 from .event_writer import write_event_trust
+from .models import Abonent, UserEvent
 
 
 class UserEventAdmin(admin.ModelAdmin):
@@ -24,18 +24,25 @@ admin.site.register(UserEvent, UserEventAdmin)
 
 
 class AbonentAdmin(admin.ModelAdmin):
+    def user_actions(self, obj):
+        return format_html(
+            '<select onchange="window.location.href=this.value;">'
+            '   <option value="">Выберите действие...</option>'
+            '   <option value="{}">Пополнить счет</option>'
+            '   <option value="{}">Показать события</option>'
+            '</select>',
+            # Пути к URL для каждого действия:
+            reverse('add_funds_to_abonent', args=[obj.pk]),
+            reverse('admin:abonents_userevent_changelist') + f'?abonent__id__exact={obj.pk}',
+        )
+    
     def add_funds_link(self, obj):
         return format_html('<a href="{}">Добавить средства</a>', reverse('add_funds_to_abonent', args=[obj.pk]))
     add_funds_link.short_description = 'Добавить средства'
-    list_display = ('login', 'password', 'account_number', 'balance', 'group', 'view_events_link', 'add_funds_link')
-    search_fields = ('account_number', 'name')
+    list_display = ('colored_name', 'account_number', 'login', 'password', 'colored_balance', 'group', 'user_actions')
+    search_fields = ('account_number', 'name', 'login_mikrotik')
     actions = ['show_balance_statistics', 'download_log_file_mikrotik', 'download_log_file_lifestream', 'trust_payment']
     # list_per_page = 30
-
-    def view_events_link(self, obj):
-        url = reverse('admin:abonents_userevent_changelist') + f'?abonent__id__exact={obj.pk}'
-        return format_html('<a href="{}">Показать события</a>', url)
-    view_events_link.short_description = 'События'
 
     def show_balance_statistics(self, request, queryset):
         positive_balance_count = Abonent.objects.filter(balance__gte=0).count()

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+  <!-- Main content -->
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+              <div class="card-header">
+                  <h3 class="card-title"><b>Оплата</b></h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <form>
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="account" value="{{ abonent.account_number }}" placeholder="Номер договора">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="total" placeholder="Сумма оплаты" required>
+                    </div>
+                    Для получения чека обязательно заполните поля Email или Телефон:</br></br>
+                    <div class="form-group">
+                        <input type="email" class="form-control form-control-orange" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-orange" name="phone" placeholder="Телефон" required>
+                    </div>
+                    <button type="submit" class="btn btn-orange btn-block">Оплатить</button>
+                </form>
+                
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+                <script>
+                (function() {
+                
+                var $form = $('form'), form = $form[0];
+                
+                $(form.elements.account).mask('999999', {
+                  placeholder: 'Номер договора',
+                  translation: {
+                    '9': { pattern: /\d/, optional: true },
+                  }
+                });
+                
+                $(form.elements.total).mask('999999.99', {
+                  placeholder: 'Сумма оплаты',
+                  translation: {
+                    '9': { pattern: /\d/, optional: true },
+                    '.': { pattern: /\./, optional: true }
+                  }
+                });
+
+                $(form.elements.phone).mask('+7 (999) 999-9999', {
+                    placeholder: 'Телефон',
+                    translation: {
+                        '9': { pattern: /\d/, optional: true }
+                    }
+                });
+                
+                $form.on('submit', function() {
+                  $.post('http://213.171.8.148/tinkoff/init/', $form.serializeArray(), function(result) {
+                    if (!result || typeof(result) !== 'object') return;
+                    if (result.error) $form.find('.message').html(result.error);
+                    if (result.url) location.href = result.url;
+                  });
+                  return false;
+                });
+                
+                })();
+                </script></br></br>
+                <p>
+                  <a class="btn " data-toggle="collapse" href="#paymentInfo" role="button" aria-expanded="false" aria-controls="paymentInfo">
+                     Оплата банковской картой онлайн (нажмите для деталей)
+                  </a>
+                </p>
+                <div class="collapse" id="paymentInfo">
+                  <div class="card card-body">
+                    <!-- Ваш большой блок текста -->
+                    Вы можете оплатить с помощью банковской карты Visa, Mastercard и МИР. После выбора способа оплаты «Банковской картой онлайн» Вам откроется защищенное окно с платежной страницей АО «Тинькофф Банк», где необходимо ввести данные Вашей банковской карты. Для дополнительной аутентификации держателя карты используется протокол 3D Secure. Если Банк, выпустивший карту, поддерживает данную технологию, Вы будете перенаправлены на сервер Банка-эмитента для дополнительной идентификации. Информацию о правилах и методах дополнительной идентификации уточняйте в Банке, выдавшем банковскую карту".</br></br>
+
+                    Гарантии безопасности</br></br>
+
+                    «АО „Тинькофф Банк“ защищает и обрабатывает данные Вашей банковской карты по стандарту безопасности PCI DSS. Передача информации в платежный шлюз происходит с применением технологии шифрования SSL. Дальнейшая передача информации происходит по закрытым банковским сетям, имеющим наивысший уровень надежности. АО „Тинькофф Банк“ не передает данные Вашей карты нам и иным третьим лицам. Для дополнительной аутентификации держателя карты используется протокол 3D Secure». В случае возникновения вопросов по совершенному платежу, Вы можете обратиться в службу поддержки клиентов по телефону: 8 (831) 288-33-80</br></br>
+
+                    Безопасность онлайн платежей</br></br>
+
+                    «Предоставляемая Вами персональная информация (имя, адрес, телефон, E-mail, номер кредитной карты) является конфиденциальной и не подлежит разглашению. Данные Вашей банковской карты передаются только в зашифрованном виде и не сохраняются на нашем Web-сервере. Безопасность обработки Интернет-платежей гарантирует АО «Тинькофф Банк». Все операции с платежными картами происходят в соответствии с требованиями Visa International и MasterCard WorldWide. При передаче информации используется специальные технологии безопасности карточных онлайн-платежей, обработка данных ведется на безопасном высокотехнологичном сервере процессинга АО «Тинькофф Банк».
+                    <!-- Остальной текст -->
+                  </div>
+                </div>
+              <!-- /.card -->
+        </div>
+    </div>
+{% endblock %} 

@@ -1,119 +1,99 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Вход в личный кабинет</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0; /* Light gray background */
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .login-logo {
-            margin-bottom: 20px;
-        }
-
-        .login-container h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            text-align: left;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 18px;
-        }
-
-        .btn {
-          width: 100%;
-          padding: 10px;
-          background-color: #ff8c00; /* Orange color */
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 16px;
-          transition: background-color 0.2s; /* Smooth transition for hover effect */
-        }
-
-        .btn:hover {
-            background-color: #e67600; /* Slightly darker orange on hover */
-        }
-
-        .error {
-            color: red;
-            margin-top: 15px;
-        }
-        .checkbox-group {
-            display: flex; /* Enable flexbox */
-            align-items: center; /* Center align items vertically */
-            justify-content: flex-start; /* Align content to the start (left) */
-        }
-        
-        .checkbox-group label {
-            margin-left: 8px; /* Space between the checkbox and the label */
-            font-size: 16px; /* Adjust the size as needed */
-        }
-        
-        .checkbox-group input[type="checkbox"] {
-            /* You can add styles for your checkbox here */
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>K.net | Личный кабинет</title>
+  
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+  <style>
+    .btn-orange {
+        background-color: #ff8500; /* Вы можете использовать конкретный оттенок оранжевого */
+        color: white; /* Цвет текста */
+        /* Добавьте любые другие стили, которые вы хотите настроить, например, границы, тени и т.д. */
+    }
+    .btn-orange:hover {
+        background-color: #b86914; /* Цвет для состояния наведения */
+        color: white;
+    }
+    .error {
+        color: red; /* Красный цвет текста */
+        /* Дополнительно, вы можете добавить другие стили, если это необходимо */
+    }
     </style>
 </head>
-{% load static %}
-<body>
-  <div class="login-container">
-      <div class="login-logo">
-          <img src="{% static 'login/img/knet_logo.png' %}" alt="Logo" width="200">
-      </div>
-      <h5>Введите логин и пароль для доступа в личный кабинет</h5>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <!-- /.login-logo -->
+  <div class="card card-outline">
+    <div class="card-header text-center">
+        <img src="{% static 'login/img/knet_logo.png' %}" alt="Logo" width="150">
+    </div>
+    <div class="card-body">
+      <p class="login-box-msg">Введите логин и пароль</p>
+
       <form method="post" action="{% url 'login' %}">
-          {% csrf_token %}
-          <div class="form-group">
-              <input type="text" name="username" id="id_username" class="form-control" required placeholder="Логин">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" name="username" id="id_username" class="form-control" required placeholder="Логин">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
           </div>
-          <div class="form-group">
-              <input type="password" name="password" id="id_password" class="form-control" required placeholder="Пароль">
+        </div>
+        <div class="input-group mb-3">
+            <input type="password" name="password" id="id_password" class="form-control" required placeholder="Пароль">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
           </div>
-          <div class="form-group checkbox-group">
-              <input type="checkbox" name="remember" id="id_remember">
-              <label for="id_remember">Запомнить меня</label>
+        </div>
+        {% if form.errors %}
+            <p class="error">Пожалуйста, попробуйте снова. Вы ввели неправильный логин или пароль.</p>
+        {% endif %}
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                &nbsp;Запомнить меня
+              </label>
+            </div>
           </div>
-          <button type="submit" class="btn">Войти</button>
-          {% if form.errors %}
-              <p class="error">Пожалуйста, попробуйте снова. Вы ввели неправильный логин или пароль.</p>
-          {% endif %}
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn btn-orange btn-block">Войти</button>
+            
+          </div>
+          <!-- /.col -->
+        </div>
       </form>
+
+      <!-- /.social-auth-links -->
+
+      
+    </div>
+    <!-- /.card-body -->
   </div>
+  <!-- /.card -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
 </body>
 </html>

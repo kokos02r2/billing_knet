@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+  <!-- Main content -->
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"><b>Смена тарифа</b></h3>
+            </div>
+            <!-- /.card-header -->
+
+            <!-- Форма для выбора дат -->
+            <div class="card-body">
+              <i class="fas fa-exclamation-triangle"></i> Изменение тарифа будет произведено в течение суток. Менять тариф можно один раз в календарный месяц.
+                <form method="post" class="form form-group mt-3">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-orange">Подтвердить</button>
+                  </div>
+                </form>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+{% endblock %}

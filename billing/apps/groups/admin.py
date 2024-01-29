@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.db import models
-from .models import Group, TvIdentifier
 from django.forms import CheckboxSelectMultiple
+
+from .models import Group, TvIdentifier
 
 
 class GroupAdmin(admin.ModelAdmin):

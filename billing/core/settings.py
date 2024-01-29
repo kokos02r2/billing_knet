@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 from datetime import timedelta
+from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
 from dotenv import load_dotenv
-
 
 load_dotenv()
 
@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-(f*qmuw^8b#39b11qviq$2dzx9pm*qqrtj=tl)o3#*hfj!1h5j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['213.171.8.148', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'apps.users.apps.UsersConfig',
     'apps.abonents.apps.AbonentsConfig',
     'apps.groups.apps.GroupsConfig',
+    'apps.tinkoff_payments.apps.TinkoffPaymentsConfig',
+    'apps.sberbank_payments.apps.SberbankPaymentsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -156,4 +158,41 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 5 * 1024 * 1024,  # 5 МБ
+            'backupCount': 0,  # Не сохраняем старые логи
+            'filename': os.path.join(BASE_DIR, 'apps/sberbank_payments/', 'sberbank.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'sberbank': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} - {levelname} - {message}',
+            'style': '{',
+        },
+    },
 }

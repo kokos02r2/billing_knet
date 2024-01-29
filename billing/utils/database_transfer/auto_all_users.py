@@ -1,9 +1,10 @@
 import csv
 import os
-import django
 import sys
-from tqdm import tqdm
+
+import django
 from django.contrib.auth.hashers import make_password
+from tqdm import tqdm
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 base_path = os.path.dirname(os.path.dirname(current_dir))
@@ -15,7 +16,7 @@ if base_path not in sys.path:
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
 
-from django.contrib.auth.models import User # noqa
+from django.contrib.auth.models import User  # noqa
 
 
 def create_user_from_csv(csv_filepath):

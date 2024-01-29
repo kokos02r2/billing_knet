@@ -1,9 +1,10 @@
-from apps.abonents.models import Abonent
-from apps.abonents.models import Group
 from django.contrib.auth.models import User
-from api.v1.serializers import AbonentSerializer, UserSerializer, GroupSerializer
-from rest_framework.permissions import IsAdminUser
 from rest_framework import viewsets
+from rest_framework.permissions import IsAdminUser
+
+from api.v1.serializers import (AbonentSerializer, GroupSerializer,
+                                UserEventSerializer, UserSerializer)
+from apps.abonents.models import Abonent, Group, UserEvent
 
 
 class AbonentViewSet(viewsets.ModelViewSet):
@@ -25,3 +26,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [IsAdminUser]
     lookup_field = 'group_name'
+
+
+class UserEventViewSet(viewsets.ModelViewSet):
+    queryset = UserEvent.objects.all()
+    serializer_class = UserEventSerializer
+    permission_classes = [IsAdminUser]
+    lookup_field = 'abonent'

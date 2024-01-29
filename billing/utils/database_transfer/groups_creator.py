@@ -1,7 +1,8 @@
 import csv
 import os
-import django
 import sys
+
+import django
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 base_path = os.path.dirname(os.path.dirname(current_dir))
@@ -12,7 +13,7 @@ if base_path not in sys.path:
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
 
-from apps.groups.models import Group # noqa
+from apps.groups.models import Group  # noqa
 
 
 def create_user_from_csv(csv_filepath):

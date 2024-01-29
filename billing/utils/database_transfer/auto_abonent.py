@@ -1,7 +1,8 @@
 import csv
 import os
-import django
 import sys
+
+import django
 from tqdm import tqdm
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -14,6 +15,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
 
 from django.contrib.auth.models import User  # noqa
+
 from apps.abonents.models import Abonent  # noqa
 from apps.groups.models import Group  # noqa
 

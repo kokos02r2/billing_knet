@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+  <!-- Main content -->
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"><b>Блокировка / Разблокировка</b></h3>
+            </div>
+            <!-- /.card-header -->
+
+            <!-- Форма для выбора дат -->
+            <div class="card-body">
+                <!-- Использование Bootstrap алертов для стилизации текста -->
+                <div>
+                  <i class="fas fa-exclamation-triangle"></i> Договор может быть блокирован минимум на 7 дней!
+                </div>
+                <div >
+                  <i class="fas fa-info-circle"></i> При окончании срока действия блокировки абоненту следует направить запрос о необходимости разблокировать договор.
+                </div>
+                <div >
+                  <i class="fas fa-calendar-alt"></i> Блокировать можно не более чем 1 раза в календарный месяц.
+                </div>
+                <div >
+                  <i class="fas fa-unlock"></i> Если Вы по каким-либо причинам не дожидаясь 7 дней захотите разблокировать договор, также следует направить запрос по разблокированию договора, при этом блокировка аннулируется и все заблокированные дни считаются как рабочие, т.е. абонентская плата за эти дни взимается.
+                </div>
+                
+                <form method="post" class="form form-group mt-3">
+                  {% csrf_token %}
+                  {{ form_block.as_p }}
+                  <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-orange">Подтвердить</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+{% endblock %}

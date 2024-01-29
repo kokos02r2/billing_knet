@@ -1,7 +1,8 @@
-from rest_framework import serializers
-from apps.abonents.models import Abonent
-from apps.groups.models import Group
 from django.contrib.auth.models import User
+from rest_framework import serializers
+
+from apps.abonents.models import Abonent, UserEvent
+from apps.groups.models import Group
 
 
 class AbonentSerializer(serializers.ModelSerializer):
@@ -24,3 +25,9 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['id', 'group_name', 'month_price', 'bandwidth']
+
+
+class UserEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserEvent
+        fields = ['id', 'abonent', 'date', 'event', 'comment', 'new_balance']

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+  <!-- Main content -->
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+              <div class="card-header">
+                  <h3 class="card-title"><b>Информация об абоненте</b>
+                    
+                  </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <table class="table table-bordered table-hover">
+                    
+                    <tbody>
+                      <tr>
+                        
+                          <td><b>Номер договора</b></td>
+                          
+                          <td><span ><b>{{ abonent.account_number }}</b></span></td>
+                        </tr>
+                      <tr>
+                        
+                        <td>Ф.И.О</td>
+                      
+                        <td><span >{{ abonent.name }}</span></td>
+                      </tr>
+                      <tr>
+                        
+                        <td>Логин</td>
+                        
+                        <td><span >{{ abonent.login.username }}</span></td>
+                      </tr>
+                      <tr>
+                       
+                        <td>Тариф</td>
+                        
+                        <td><span class="badge bg-primary">{{ abonent.group }}</span></td>
+                      </tr>
+                      
+                      <tr>
+                          
+                          <td>Баланс</td>
+                          <td>
+                              <div class="d-flex align-items-center justify-content-between"> <!-- Flex-контейнер для горизонтального выравнивания -->
+                                  <dd style="color: {% if abonent.balance < 0 %}#dc3545{% else %}#28a745{% endif %}; margin-bottom: 0;">
+                                      <b>{{ abonent.balance|floatformat:2 }} руб.</b>
+                                  </dd>
+                                  <!-- Кнопка "Пополнить" справа от баланса -->
+                                  <a href="{% url 'payment' %}" class="btn btn-orange">Пополнить</a>
+                                  
+
+                              </div>
+                          </td>
+                          
+  
+                      </tr>
+                      <tr>
+                       
+                          <td>Доверительный платеж</td>
+                          
+                          <td>
+                            <div class="d-flex align-items-center justify-content-between">
+                              {% if abonent.credit_formatted %}
+                                {{ abonent.credit_formatted }}
+                              {% else %}
+                                &nbsp;
+                              {% endif %}
+                              {% if abonent.credit_check == None or abonent.credit_check != current_month %}
+                                <a href="{% url 'trust_payment' %}" class="btn btn-orange">Взять</a>
+                              {% endif %}
+                            </div>
+                          </td>
+                              
+                      </tr>
+                      <tr>
+                          <td>Статус</td>
+                          
+                          <td><dd style="color: {% if abonent.balance < 0 or abonent.block == True %}#dc3545{% else %}#28a745{% endif %};">
+                              <strong>
+                                  {% if abonent.balance < 0 or abonent.block == True %}
+                                      Блокировка
+                                  {% else %}
+                                      Активен
+                                  {% endif %}
+                              </strong>
+                          </dd></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- /.card -->
+        </div>
+{% endblock %} 

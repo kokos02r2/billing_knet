@@ -15,18 +15,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from . import views
 
+from apps.sberbank_payments.views import recieve_payment_sberbank
+from apps.users.views import report, send_status, send_tarif
+
+from . import views
 
 urlpatterns = [
     path('admin/add-funds/<int:abonent_id>/', views.add_funds_to_abonent, name='add_funds_to_abonent'),
-    path('abonents/', include('apps.abonents.urls')),
-    path('groups/', include('apps.groups.urls')),
+    path('tinkoff/', include('apps.tinkoff_payments.urls')),
+    path('sberbank/', recieve_payment_sberbank, name='sberbank_payment'),
     path('admin/', admin.site.urls),
     path('auth/', include('apps.users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
     path('profile/', views.profile, name='profile'),
-    path('profile_tarif/', views.profile_tarif, name='profile_tarif'),
+    path('payment/', views.payment, name='payment'),
+    path('tarif/', send_tarif, name='tarif'),
+    path('block/', send_status, name='block'),
+    path('report/', report, name='report'),
     path('trust_payment/', views.trust_payment, name='trust_payment'),
     path('api/auth/', include('api.auth.urls')),
     path('api/', include('api.v1.urls')),
