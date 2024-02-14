@@ -30,18 +30,22 @@ class AbonentAdmin(admin.ModelAdmin):
             '   <option value="">Выберите действие...</option>'
             '   <option value="{}">Пополнить счет</option>'
             '   <option value="{}">Показать события</option>'
+            '   <option value="{}">Блокировка</option>'
+            '   <option value="{}">Смена тарифа</option>'
             '</select>',
             # Пути к URL для каждого действия:
             reverse('add_funds_to_abonent', args=[obj.pk]),
             reverse('admin:abonents_userevent_changelist') + f'?abonent__id__exact={obj.pk}',
+            reverse('block_abonent', args=[obj.pk]),
+            reverse('change_tarif', args=[obj.pk]),
         )
-    
+
     def add_funds_link(self, obj):
         return format_html('<a href="{}">Добавить средства</a>', reverse('add_funds_to_abonent', args=[obj.pk]))
     add_funds_link.short_description = 'Добавить средства'
-    list_display = ('colored_name', 'account_number', 'login', 'password', 'colored_balance', 'group', 'user_actions')
-    search_fields = ('account_number', 'name', 'login_mikrotik')
-    actions = ['show_balance_statistics', 'download_log_file_mikrotik', 'download_log_file_lifestream', 'trust_payment']
+    list_display = ('colored_name', 'account_number', 'login', 'colored_balance', 'user_actions', 'group', 'address', 'phone', 'credit')
+    search_fields = ('account_number', 'name', 'login_mikrotik', 'address', 'phone', 'description')
+    actions = ['show_balance_statistics', 'download_log_file_mikrotik', 'download_log_file_lifestream', 'trust_payment', 'get_report', 'download_subscriber_count_report']
     # list_per_page = 30
 
     def show_balance_statistics(self, request, queryset):
@@ -128,5 +132,24 @@ class AbonentAdmin(admin.ModelAdmin):
 
     trust_payment.short_description = "Взять доверительный"
 
+    def get_report(self, request, queryset):
+        return HttpResponseRedirect(reverse('report_view'))
+
+    get_report.short_description = 'Сформировать отчет по платежам'
+
+    def download_subscriber_count_report(self, request, queryset):
+        log_file_path = 'utils/reports/subscriber_count_report.txt'
+
+        with open(log_file_path, 'rb') as log_file:
+            response = HttpResponse(log_file.read(), content_type="text/plain")
+            response['Content-Disposition'] = 'attachment; filename="subscriber_count_report.txt"'
+            return response
+
+    download_subscriber_count_report.short_description = "Скачать отчет по количеству абонентов"
+
 
 admin.site.register(Abonent, AbonentAdmin)
+
+
+admin.site.site_header = "K.NET - БИЛЛИНГ"
+admin.site.site_title = "Управление биллингом"

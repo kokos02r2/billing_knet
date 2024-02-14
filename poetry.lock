@@ -93,6 +93,17 @@ files = [
 pycparser = "*"
 
 [[package]]
+name = "chardet"
+version = "5.2.0"
+description = "Universal encoding detector for Python 3"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "chardet-5.2.0-py3-none-any.whl", hash = "sha256:e1cf59446890a00105fe7b7912492ea04b6e6f06d4b742b2c788469e34c82970"},
+    {file = "chardet-5.2.0.tar.gz", hash = "sha256:1b3b6ff479a8c414bc3fa2c0852995695c4a026dcd6d0633b2dd092ca39c1cf7"},
+]
+
+[[package]]
 name = "charset-normalizer"
 version = "3.3.2"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
@@ -288,6 +299,21 @@ files = [
     {file = "django-admin-rangefilter-0.12.0.tar.gz", hash = "sha256:56035f4190d35aad4e699f8fd81306f964642edc96e15ec2a532a1598a466615"},
     {file = "django_admin_rangefilter-0.12.0-py2.py3-none-any.whl", hash = "sha256:4fd7211271c70c51469fc39b182b70f1199ab9ce0b16264654a2eec96751d686"},
 ]
+
+[[package]]
+name = "django-dbbackup"
+version = "4.1.0"
+description = "Management commands to help backup and restore a project database and media."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-dbbackup-4.1.0.tar.gz", hash = "sha256:c411d38d0f8e60ab3254017278c14ebd75d4001b5634fc73be7fbe8a5260583b"},
+    {file = "django_dbbackup-4.1.0-py3-none-any.whl", hash = "sha256:c539b5246b429a22a8efadbab3719ee6b8eda45c66c4ff6592056c590d51c782"},
+]
+
+[package.dependencies]
+django = ">=2.2"
+pytz = "*"
 
 [[package]]
 name = "django-templated-mail"
@@ -717,6 +743,51 @@ files = [
 six = "*"
 
 [[package]]
+name = "sentry-sdk"
+version = "1.39.2"
+description = "Python client for Sentry (https://sentry.io)"
+optional = false
+python-versions = "*"
+files = [
+    {file = "sentry-sdk-1.39.2.tar.gz", hash = "sha256:24c83b0b41c887d33328a9166f5950dc37ad58f01c9f2fbff6b87a6f1094170c"},
+    {file = "sentry_sdk-1.39.2-py2.py3-none-any.whl", hash = "sha256:acaf597b30258fc7663063b291aa99e58f3096e91fe1e6634f4b79f9c1943e8e"},
+]
+
+[package.dependencies]
+certifi = "*"
+urllib3 = {version = ">=1.26.11", markers = "python_version >= \"3.6\""}
+
+[package.extras]
+aiohttp = ["aiohttp (>=3.5)"]
+arq = ["arq (>=0.23)"]
+asyncpg = ["asyncpg (>=0.23)"]
+beam = ["apache-beam (>=2.12)"]
+bottle = ["bottle (>=0.12.13)"]
+celery = ["celery (>=3)"]
+chalice = ["chalice (>=1.16.0)"]
+clickhouse-driver = ["clickhouse-driver (>=0.2.0)"]
+django = ["django (>=1.8)"]
+falcon = ["falcon (>=1.4)"]
+fastapi = ["fastapi (>=0.79.0)"]
+flask = ["blinker (>=1.1)", "flask (>=0.11)", "markupsafe"]
+grpcio = ["grpcio (>=1.21.1)"]
+httpx = ["httpx (>=0.16.0)"]
+huey = ["huey (>=2)"]
+loguru = ["loguru (>=0.5)"]
+opentelemetry = ["opentelemetry-distro (>=0.35b0)"]
+opentelemetry-experimental = ["opentelemetry-distro (>=0.40b0,<1.0)", "opentelemetry-instrumentation-aiohttp-client (>=0.40b0,<1.0)", "opentelemetry-instrumentation-django (>=0.40b0,<1.0)", "opentelemetry-instrumentation-fastapi (>=0.40b0,<1.0)", "opentelemetry-instrumentation-flask (>=0.40b0,<1.0)", "opentelemetry-instrumentation-requests (>=0.40b0,<1.0)", "opentelemetry-instrumentation-sqlite3 (>=0.40b0,<1.0)", "opentelemetry-instrumentation-urllib (>=0.40b0,<1.0)"]
+pure-eval = ["asttokens", "executing", "pure_eval"]
+pymongo = ["pymongo (>=3.1)"]
+pyspark = ["pyspark (>=2.4.4)"]
+quart = ["blinker (>=1.1)", "quart (>=0.16.1)"]
+rq = ["rq (>=0.6)"]
+sanic = ["sanic (>=0.8)"]
+sqlalchemy = ["sqlalchemy (>=1.2)"]
+starlette = ["starlette (>=0.19.1)"]
+starlite = ["starlite (>=1.48)"]
+tornado = ["tornado (>=5)"]
+
+[[package]]
 name = "shortuuid"
 version = "1.0.11"
 description = "A generator library for concise, unambiguous and URL-safe UUIDs."
@@ -853,7 +924,24 @@ brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)"]
 socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["zstandard (>=0.18.0)"]
 
+[[package]]
+name = "yadisk"
+version = "2.1.0"
+description = "Библиотека-клиент REST API Яндекс.Диска / Yandex.Disk REST API client library"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "yadisk-2.1.0-py3-none-any.whl", hash = "sha256:38217dea233c6ce0dba64bc90c824b5985eea0fb41f249c7fde0b6c784f5a2ed"},
+    {file = "yadisk-2.1.0.tar.gz", hash = "sha256:1052b70065f932a726d52dc936540928f19efe9b1f2be9e36bda6beb854fa294"},
+]
+
+[package.extras]
+async-defaults = ["aiofiles", "httpx"]
+async-files = ["aiofiles"]
+sync-defaults = ["requests"]
+test = ["aiofiles", "httpx", "pycurl", "requests"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "756d900ce098abcc668462074dcd62c39f015c1362694cd78669b89037e7f70c"
+content-hash = "1956d2fc70afc7315839cae75bf55b821bdf073730c90cc8ca0fe83ae449e9f9"

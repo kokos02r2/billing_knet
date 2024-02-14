@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<h1>Блокировка/Разблокировка {{ abonent.account_number }}</h1>
+<h3>Текущий статус: {{ abonent.block }}</span></h3><br>
+<form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Применить">
+</form>
+
+
+{% endblock %}

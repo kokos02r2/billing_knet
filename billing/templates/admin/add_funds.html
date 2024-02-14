@@ -1,9 +1,29 @@
 {% extends "admin/base_site.html" %}
 
 {% block content %}
-<h1>Добавление средств на счет абонента {{ abonent }}</h1>
+<h1>Добавление средств на счет абонента {{ abonent.account_number }}</h1>
+<h3>Текущий баланс: <span id="currentBalance">{{ abonent.balance }}</span> руб.</h3><br>
 <form method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Добавить">
 </form>
+
+<script>
+    // Функция для обновления отображения баланса
+    function updateBalance() {
+        var currentBalance = parseFloat(document.getElementById('currentBalance').textContent);
+        var enteredAmount = parseFloat(document.getElementById('id_amount').value);
+        if (!isNaN(enteredAmount)) {
+            var newBalance = currentBalance + enteredAmount;
+            document.getElementById('newBalance').textContent = 'Новый баланс: ' + newBalance.toFixed(2) + ' руб.';
+        }
+    }
+
+    // Добавление обработчика события для поля ввода суммы
+    document.getElementById('id_amount').addEventListener('input', updateBalance);
+
+    // Элемент для отображения предполагаемого нового баланса
+    document.querySelector('form').insertAdjacentHTML('afterend', '<p id="newBalance"></p>');
+</script>
+
 {% endblock %}

@@ -3,6 +3,7 @@ import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from logging.handlers import TimedRotatingFileHandler
+from django.db.models import Q
 
 import django
 from dotenv import load_dotenv
@@ -26,7 +27,7 @@ from utils.telegram_sender import send_telegram_message  # noqa
 load_dotenv()
 
 handler = TimedRotatingFileHandler(
-    'utils/billing_scripts/logs/mikrotik_connection_errors.log',
+    'billing_knet/billing/utils/billing_scripts/logs/mikrotik_connection_errors.log',
     when='midnight',
     backupCount=0,
     encoding='utf-8'
@@ -151,7 +152,9 @@ def create_missing_profiles(server_settings):
                     only_one='yes',
                     local_address=server_settings["local_ip"]
                 )
-        users_with_positive_balance = Abonent.objects.filter(balance__gte=0)
+        users_with_positive_balance = Abonent.objects.filter(
+            Q(balance__gte=0) & Q(block=False)
+        )
         existing_users_data = {user['name']: user for user in api.get_resource('/ppp/secret').get()}
         existing_users = set(existing_users_data.keys())
         with ThreadPoolExecutor(max_workers=50) as executor:
@@ -160,15 +163,19 @@ def create_missing_profiles(server_settings):
 
         existing_users_data = {user['name']: user for user in api.get_resource('/ppp/secret').get()}
         existing_users = set(existing_users_data.keys())
-        db_users_negative_balance_logins = set(Abonent.objects.filter(balance__lt=0).values_list('login_mikrotik', flat=True))
+        db_users_negative_balance_logins = set(Abonent.objects.filter(
+            Q(balance__lt=0) | Q(block=True)
+        ).values_list('login_mikrotik', flat=True))
         users_to_delete = existing_users.intersection(db_users_negative_balance_logins)
         while True:
-            with ThreadPoolExecutor(max_workers=50) as executor:
+            with ThreadPoolExecutor(max_workers=20) as executor:
                 for user_login in users_to_delete:
                     executor.submit(process_user_delete, user_login, server_settings)
             existing_users_data = {user['name']: user for user in api.get_resource('/ppp/secret').get()}
             existing_users = set(existing_users_data.keys())
-            db_users_negative_balance_logins = set(Abonent.objects.filter(balance__lt=0).values_list('login_mikrotik', flat=True))
+            db_users_negative_balance_logins = set(Abonent.objects.filter(
+                Q(balance__lt=0) | Q(block=True)
+            ).values_list('login_mikrotik', flat=True))
             users_to_delete = existing_users.intersection(db_users_negative_balance_logins)
             if not users_to_delete:
                 break
@@ -192,7 +199,7 @@ if __name__ == '__main__':
             future = executor.submit(create_missing_profiles, server_settings)
             futures.append((server_name, future))
 
-        log_file_path = 'utils/billing_scripts/logs/mikrotik_connection_errors.log'  # Укажите путь к вашему файлу лога
+        log_file_path = 'billing_knet/billing/utils/billing_scripts/logs/mikrotik_connection_errors.log'  # Укажите путь к вашему файлу лога
 
         for server_name, future in futures:
             try:

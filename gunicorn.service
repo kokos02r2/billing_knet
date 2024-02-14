@@ -6,9 +6,9 @@ After=network.target
 [Service]
 User=root
 
-WorkingDirectory=/root/billing_knet/billing/
+WorkingDirectory=/home/kokos/billing_knet/billing
 
-ExecStart=/root/.cache/pypoetry/virtualenvs/billing-knet-4t6T0mqn-py3.10/bin/gunicorn --bind 127.0.0.1:8000 core.wsgi:application
+ExecStart=/home/kokos/.cache/pypoetry/virtualenvs/billing-knet-we3QL6QU-py3.10/bin/gunicorn --bind 127.0.0.1:8000 core.wsgi:application
 
 [Install]
 # группировка юнитов 

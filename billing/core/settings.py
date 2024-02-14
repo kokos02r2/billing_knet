@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 import os
+import sentry_sdk
 from datetime import timedelta
-from logging.handlers import TimedRotatingFileHandler
+
+from sentry_sdk.integrations.django import DjangoIntegration
 from pathlib import Path
+
 
 from dotenv import load_dotenv
 
@@ -33,7 +36,7 @@ SECRET_KEY = 'django-insecure-(f*qmuw^8b#39b11qviq$2dzx9pm*qqrtj=tl)o3#*hfj!1h5j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['213.171.8.148', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['billing.knet-nn.ru', '82.97.249.96', '127.0.0.1', 'localhost', '[::1]', 'testserver']
 
 
 # Application definition
@@ -53,7 +56,9 @@ INSTALLED_APPS = [
     'rangefilter',
     'rest_framework',
     'djoser',
+    'dbbackup',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -93,12 +98,12 @@ DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
         'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT')
     }
-} 
+}
 
 
 # Password validation
@@ -123,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -167,6 +172,7 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
 
 
 LOGGING = {
@@ -196,3 +202,17 @@ LOGGING = {
         },
     },
 }
+
+
+sentry_sdk.init(
+    dsn=os.getenv('DSN_KEY'),
+    integrations=[DjangoIntegration()],
+)
+
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'location': os.path.join(BASE_DIR, 'db_backups/'),
+}
+DBBACKUP_FILENAME_TEMPLATE = '{datetime}-{databasename}.{extension}'
+DBBACKUP_CLEANUP_KEEP_DAYS = 7

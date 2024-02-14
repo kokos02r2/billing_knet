@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Оплата</title>
+</head>
+<body>
+
+<form>
+<div class="message"></div>
+<div>
+<input type="text" name="account">
+</div>
+<div>
+<input type="text" name="total">
+</div>
+<div>
+<button type="submit">Оплатить</button>
+</div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+(function() {
+
+var $form = $('form'), form = $form[0];
+
+$(form.elements.account).mask('999999', {
+  placeholder: 'Номер договора',
+  translation: {
+    '9': { pattern: /\d/, optional: true },
+  }
+});
+
+$(form.elements.total).mask('999999.99', {
+  placeholder: 'Сумма оплаты',
+  translation: {
+    '9': { pattern: /\d/, optional: true },
+    '.': { pattern: /\./, optional: true }
+  }
+});
+
+$form.on('submit', function() {
+  $.post('http://213.171.8.148/tinkoff/init/', $form.serializeArray(), function(result) {
+    if (!result || typeof(result) !== 'object') return;
+    if (result.error) $form.find('.message').html(result.error);
+    if (result.url) location.href = result.url;
+  });
+  return false;
+});
+
+})();
+</script>
+</body>
+</html>

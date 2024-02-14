@@ -58,7 +58,7 @@
                 });
                 
                 $form.on('submit', function() {
-                  $.post('http://213.171.8.148/tinkoff/init/', $form.serializeArray(), function(result) {
+                  $.post('https://billing.knet-nn.ru/tinkoff/init/', $form.serializeArray(), function(result) {
                     if (!result || typeof(result) !== 'object') return;
                     if (result.error) $form.find('.message').html(result.error);
                     if (result.url) location.href = result.url;

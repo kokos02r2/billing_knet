@@ -1,56 +1,175 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Оплата</title>
-</head>
-<body>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>K.net | Личный кабинет</title>
+      
+        <!-- Google Font: Source Sans Pro -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+        <!-- Font Awesome Icons -->
+        <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+        <style>
+          .btn-orange {
+              background-color: #ff8500; /* Вы можете использовать конкретный оттенок оранжевого */
+              color: white; /* Цвет текста */
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Тень */
+              /* Добавьте любые другие стили, которые вы хотите настроить, например, границы, тени и т.д. */
+          }
+          .btn-orange:hover {
+              background-color: #b86914; /* Цвет для состояния наведения */
+              color: white;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Тень */
+          }
+          .error {
+              color: red; /* Красный цвет текста */
+              /* Дополнительно, вы можете добавить другие стили, если это необходимо */
+          }
+          
+          .nav-link.active {
+              background-color: #ff8500; /* Синий цвет фона */
+              color: white !important; /* Белый цвет текста */
+              border-radius: 5px; /* Скругление углов */
+              
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); /* Тень */
+          }
+      
+          .pagination .page-link {
+            color: #ff8500; /* Цвет текста кнопок */
+          }
+          
+          .pagination .page-link:hover {
+            color: #ffffff; /* Цвет текста при наведении */
+            background-color: #ff8500; /* Цвет фона при наведении */
+            border-color: #ff8500; /* Цвет границы при наведении */
+          }
+        
+          .pagination .active .page-link {
+            color: #ffffff; /* Цвет текста для активной кнопки */
+            background-color: #ff8500; /* Цвет фона для активной кнопки */
+            border-color: #ff8500; /* Цвет границы для активной кнопки */
+          }
+          .compact-table td, .compact-table th {
+            padding: .5rem; /* Уменьшите верхний и нижний отступы */
+            line-height: 1; /* Уменьшите высоту строки */
+          }
+          .form-control-orange {
+            border-color: #ff8500; /* Оранжевый цвет контура */
+            box-shadow: none; /* Убрать стандартную тень Bootstrap при фокусе */
+          }
+        
+          .form-control-orange:focus {
+            border-color: #ff8500; /* Оранжевый цвет контура при фокусе */
+            box-shadow: 0 0 0 0.2rem rgba(255, 133, 0, 0.25); /* Небольшая тень при фокусе */
+          }
+          
+        </style>
+    </head>
+<body class="hold-transition layout-top-nav">
+<br>
+<div class="wrapper">
+    <!-- Main content -->
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+              <div class="card-header">
+                  <h3 class="card-title"><b>Оплата банковской картой за услуги K.net</b></h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="account" placeholder="Номер договора" required>
+                        <div class="error-message" style="color: red; display: none;"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="total" placeholder="Сумма оплаты" required>
+                    </div>
+                    Для получения чека обязательно заполните поля Email или Телефон:</br></br>
+                    <div class="form-group">
+                        <input type="email" class="form-control form-control-orange" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-orange" name="phone" placeholder="Телефон" required>
+                    </div>
+                    <button type="submit" class="btn btn-orange btn-block">Ввод платежных данных</button>
+                </form>
+                
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <script>
+                (function() {
+                
+                var $form = $('form'), form = $form[0];
+                
+                $(form.elements.account).mask('999999', {
+                  placeholder: 'Номер договора',
+                  translation: {
+                    '9': { pattern: /\d/, optional: true },
+                  }
+                });
+                
+                $(form.elements.total).mask('999999.99', {
+                  placeholder: 'Сумма оплаты',
+                  translation: {
+                    '9': { pattern: /\d/, optional: true },
+                    '.': { pattern: /\./, optional: true }
+                  }
+                });
 
-<form>
-<div class="message"></div>
-<div>
-<input type="text" name="account">
+                $(form.elements.phone).mask('+7 (999) 999-9999', {
+                    placeholder: 'Телефон',
+                    translation: {
+                        '9': { pattern: /\d/, optional: true }
+                    }
+                });
+                
+                $form.on('submit', function() {
+                    $.post('https://billing.knet-nn.ru/tinkoff/init/', $form.serializeArray(), function(result) {
+                        if (!result || typeof(result) !== 'object') return;
+                        if (result.error) {
+                            // Очистка предыдущих сообщений об ошибке
+                            $('.error-message').hide().empty();
+                            // Вывод сообщения об ошибке под полем номера договора
+                            $form.find('[name="account"]').next('.error-message').html(result.error).show();
+                        }
+                        if (result.url) location.href = result.url;
+                    });
+                    return false;
+                });
+                
+                })();
+                </script></br></br>
+                <p>
+                  <a class="btn " data-toggle="collapse" href="#paymentInfo" role="button" aria-expanded="false" aria-controls="paymentInfo">
+                     Оплата банковской картой онлайн (нажмите для деталей)
+                  </a>
+                </p>
+                <div class="collapse" id="paymentInfo">
+                  <div class="card card-body">
+                    <!-- Ваш большой блок текста -->
+                    Вы можете оплатить с помощью банковской карты Visa, Mastercard и МИР. После выбора способа оплаты «Банковской картой онлайн» Вам откроется защищенное окно с платежной страницей АО «Тинькофф Банк», где необходимо ввести данные Вашей банковской карты. Для дополнительной аутентификации держателя карты используется протокол 3D Secure. Если Банк, выпустивший карту, поддерживает данную технологию, Вы будете перенаправлены на сервер Банка-эмитента для дополнительной идентификации. Информацию о правилах и методах дополнительной идентификации уточняйте в Банке, выдавшем банковскую карту".</br></br>
+
+                    Гарантии безопасности</br></br>
+
+                    «АО „Тинькофф Банк“ защищает и обрабатывает данные Вашей банковской карты по стандарту безопасности PCI DSS. Передача информации в платежный шлюз происходит с применением технологии шифрования SSL. Дальнейшая передача информации происходит по закрытым банковским сетям, имеющим наивысший уровень надежности. АО „Тинькофф Банк“ не передает данные Вашей карты нам и иным третьим лицам. Для дополнительной аутентификации держателя карты используется протокол 3D Secure». В случае возникновения вопросов по совершенному платежу, Вы можете обратиться в службу поддержки клиентов по телефону: 8 (831) 288-33-80</br></br>
+
+                    Безопасность онлайн платежей</br></br>
+
+                    «Предоставляемая Вами персональная информация (имя, адрес, телефон, E-mail, номер кредитной карты) является конфиденциальной и не подлежит разглашению. Данные Вашей банковской карты передаются только в зашифрованном виде и не сохраняются на нашем Web-сервере. Безопасность обработки Интернет-платежей гарантирует АО «Тинькофф Банк». Все операции с платежными картами происходят в соответствии с требованиями Visa International и MasterCard WorldWide. При передаче информации используется специальные технологии безопасности карточных онлайн-платежей, обработка данных ведется на безопасном высокотехнологичном сервере процессинга АО «Тинькофф Банк».
+                    <!-- Остальной текст -->
+                  </div>
+                </div>
+            
+              <!-- /.card -->
+        </div>
+    </div>
 </div>
-<div>
-<input type="text" name="total">
-</div>
-<div>
-<button type="submit">Оплатить</button>
-</div>
-</form>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-<script>
-(function() {
-
-var $form = $('form'), form = $form[0];
-
-$(form.elements.account).mask('999999', {
-  placeholder: 'Номер договора',
-  translation: {
-    '9': { pattern: /\d/, optional: true },
-  }
-});
-
-$(form.elements.total).mask('999999.99', {
-  placeholder: 'Сумма оплаты',
-  translation: {
-    '9': { pattern: /\d/, optional: true },
-    '.': { pattern: /\./, optional: true }
-  }
-});
-
-$form.on('submit', function() {
-  $.post('http://213.171.8.148/tinkoff/init/', $form.serializeArray(), function(result) {
-    if (!result || typeof(result) !== 'object') return;
-    if (result.error) $form.find('.message').html(result.error);
-    if (result.url) location.href = result.url;
-  });
-  return false;
-});
-
-})();
-</script>
 </body>
 </html>

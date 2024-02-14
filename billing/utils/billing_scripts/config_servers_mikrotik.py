@@ -59,22 +59,22 @@ SERVERS = {
     #     "password": os.getenv('PASSWORD'),
     #     "port": int(os.getenv('PORT_UNIVERSAL'))
     # },
-    "Большеорловское": {
-        "host": os.getenv('IP_ADDRESS_BO'),
-        "username": os.getenv('LOGIN'),
-        "password": os.getenv('PASSWORD'),
-        "port": int(os.getenv('PORT_TEST')),
-        "remote_ip": False,
-        "local_ip": "10.20.0.1",
-    },
-    "Test": {
-        "host": os.getenv('IP_ADDRESS_TEST'),
-        "username": os.getenv('LOGIN'),
-        "password": os.getenv('PASSWORD'),
-        "port": int(os.getenv('PORT_TEST')),
-        "remote_ip": True,
-        "local_ip": "10.12.0.1",
-    },
+    # "Большеорловское": {
+    #     "host": os.getenv('IP_ADDRESS_BO'),
+    #     "username": os.getenv('LOGIN'),
+    #     "password": os.getenv('PASSWORD'),
+    #     "port": int(os.getenv('PORT_TEST')),
+    #     "remote_ip": False,
+    #     "local_ip": "10.20.0.1",
+    # },
+    # "Test": {
+    #     "host": os.getenv('IP_ADDRESS_TEST'),
+    #     "username": os.getenv('LOGIN'),
+    #     "password": os.getenv('PASSWORD'),
+    #     "port": int(os.getenv('PORT_TEST')),
+    #     "remote_ip": True,
+    #     "local_ip": "10.12.0.1",
+    # },
 }
 
 

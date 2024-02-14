@@ -27,7 +27,7 @@ def init_payment(request):
     account = request.POST.get('account')
     total = request.POST.get('total')
     phone = request.POST.get('phone')
-    email = request.GET.get('email')
+    email = request.POST.get('email')
     if not Abonent.objects.filter(account_number=account).exists():
         return JsonResponse({
             'error': 'Аккаунт с таким номером не найден.'
@@ -63,6 +63,9 @@ def init_payment(request):
         abonent = Abonent.objects.get(account_number=account)
         PaymentTinkoff.objects.create(
             account=abonent,
+            account_number=abonent.account_number,
+            email=email,
+            phone=phone,
             payment_id=response.get('PaymentId'),
             status=response.get('Status'),
             amount=total,

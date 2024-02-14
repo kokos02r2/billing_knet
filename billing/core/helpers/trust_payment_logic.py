@@ -43,3 +43,5 @@ def set_trust_payment(abonent):
                 return (f"Доверительный платеж на сумму {trust_payment} руб. до {formatted_date} успешно оформлен")
             else:
                 return ("Денег достаточно доверительный не нужен")
+    else:
+        return ("Доверительный платеж можно брать один раз в календарный месяц")

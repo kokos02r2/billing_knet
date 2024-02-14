@@ -21,10 +21,12 @@ class Abonent(models.Model):
     credit = models.CharField(max_length=200, null=True, blank=True)
     credit_check = models.CharField(max_length=30, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
-    phone = models.CharField(max_length=20, null=True, blank=True)
+    phone = models.CharField(max_length=200, null=True, blank=True)
     address = models.TextField(null=True, blank=True)
     passport = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
+    additional_field_1 = models.CharField(max_length=200, null=True, blank=True)
+    additional_field_2 = models.CharField(max_length=200, null=True, blank=True)
 
     def colored_balance(self):
         if self.balance < 0:

@@ -1,0 +1,22 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<h1>Формирование отчета по платежам</h1><br>
+<h3>Введите даты с 16-го прошлого месяца по 16-е этого месяца</h3><br>
+<script>
+    $(function() {
+        $(".datepicker").datepicker({
+            dateFormat: "yy-mm-dd" // Формат даты, совместимый с Django
+        });
+    });
+    </script>
+<form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Получить отчет">
+</form>
+
+
+{% endblock %}

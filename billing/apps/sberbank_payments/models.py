@@ -5,6 +5,7 @@ from apps.abonents.models import Abonent
 
 class PaymentSberbank(models.Model):
     account = models.ForeignKey(Abonent, on_delete=models.CASCADE, related_name='sberbank_payments')
+    account_number = models.CharField(max_length=30, null=True, blank=True)
     txn_id = models.CharField(max_length=30, null=True, blank=True)
     txn_date = models.CharField(max_length=100, null=True, blank=True)
     status = models.CharField(max_length=100, null=True, blank=True)

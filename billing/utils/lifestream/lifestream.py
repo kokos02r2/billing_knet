@@ -6,6 +6,7 @@ from logging.handlers import TimedRotatingFileHandler
 import django
 import requests
 from django.db.models import Prefetch
+from django.db.models import Q
 from dotenv import load_dotenv
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,15 +20,14 @@ django.setup()
 
 from apps.abonents.models import Abonent  # noqa
 from apps.groups.models import TvIdentifier  # noqa
-from utils.billing_scripts.add_users_to_mikrotik import \
-    is_message_logged  # noqa
+from utils.billing_scripts.add_users_to_mikrotik import is_message_logged  # noqa
 from utils.telegram_sender import send_telegram_message  # noqa
 
 load_dotenv()
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 CHAT_ID = os.getenv('CHAT_ID')
-LOG_FILE_PATH = "utils/lifestream/lifestream.log"
+LOG_FILE_PATH = "billing_knet/billing/utils/lifestream/lifestream.log"
 
 handler = TimedRotatingFileHandler(
     LOG_FILE_PATH,
@@ -46,8 +46,10 @@ logger = logging.getLogger(__name__)
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
+PAGE_SIZE = 1000
 
-def call_api(endpoint='', method='get', data=None, params=None, headers=None):
+
+def call_api(endpoint='', method='get', data=None, params=None, headers=None, page=None):
     base_api_url = os.getenv('BASE_API_LIFESTREAM_URL')
     url = f"{base_api_url}/{endpoint}"
     try:
@@ -56,7 +58,8 @@ def call_api(endpoint='', method='get', data=None, params=None, headers=None):
         elif method == 'delete':
             response = requests.delete(url, headers=headers)
         else:
-            response = requests.get(base_api_url, params=params, headers=headers)
+            url = f"{base_api_url}?page_size={PAGE_SIZE}"
+            response = requests.get(url, params=params, headers=headers)
 
         response.raise_for_status()
         return response.json() if response.content else None
@@ -81,6 +84,9 @@ def delete_user(api_user):
 
 
 def create_user(user, tv_ids):
+    if not user.email:
+        logger.info(f"Skipping user creation for {user.login_mikrotik} due to missing email")
+        return
     data = {
             "username": user.login_mikrotik,
             "email": user.email,
@@ -95,9 +101,11 @@ def create_user(user, tv_ids):
 
 
 def process_users(users_with_balance, existing_users):
+    existing_users_dict = {user['username']: user for user in existing_users}
     for user in users_with_balance:
-        existing_user = next((u for u in existing_users if u['username'] == user.login_mikrotik), None)
         tv_ids = [tv.identifier for tv in user.group.tv_identifiers.all()]
+        existing_user = existing_users_dict.get(user.login_mikrotik)
+
         if not existing_user:
             create_user(user, tv_ids)
         else:
@@ -112,22 +120,24 @@ def add_user_lifestream():
     group_prefetch = Prefetch('group__tv_identifiers', queryset=tv_identifier_query)
 
     users_with_positive_balance = Abonent.objects.filter(
-        balance__gt=0, group__tv_identifiers__isnull=False
+        balance__gte=0, block=False, group__tv_identifiers__isnull=False
     ).prefetch_related(group_prefetch).distinct()
+    blocked_or_negative_balance_logins = set(Abonent.objects.filter(
+        Q(block=True) | Q(balance__lt=0)
+    ).values_list('login_mikrotik', flat=True))
 
     all_users_response = call_api()
-    if all_users_response:
+    if all_users_response and all_users_response.get('accounts'):
         existing_users = [{
             'username': user['username'],
             'id': user['id'],
             'subscriptions': user['subscriptions']
         } for user in all_users_response['accounts']]
-        positive_balance_logins = [user.login_mikrotik for user in users_with_positive_balance]
 
         process_users(users_with_positive_balance, existing_users)
 
-        for api_user in all_users_response['accounts']:
-            if api_user['username'] not in positive_balance_logins:
+        for api_user in existing_users:
+            if api_user['username'] in blocked_or_negative_balance_logins:
                 delete_user(api_user)
 
 

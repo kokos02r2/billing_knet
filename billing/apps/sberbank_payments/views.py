@@ -49,6 +49,7 @@ def recieve_payment_sberbank(request):
                     abonent = Abonent.objects.get(account_number=account)
                     PaymentSberbank.objects.create(
                         account=abonent,
+                        account_number=account,
                         txn_id=txn_id,
                         status=status,
                         amount=amount,
