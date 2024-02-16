@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from dotenv import load_dotenv
+from django.db import transaction
 
 from apps.abonents.models import Abonent, UserEvent
 from apps.tinkoff_payments.models import PaymentTinkoff
@@ -17,8 +18,8 @@ from apps.tinkoff_payments.payment import TinkoffPaymentInteraction
 
 load_dotenv()
 
-terminal = os.getenv('TERMINAL_ID')
-secret_key = os.getenv('TINKOFF_SECRET_KEY')
+terminal = os.getenv('TERMINAL_ID_WORK')
+secret_key = os.getenv('TINKOFF_SECRET_KEY_WORK')
 
 
 @csrf_exempt
@@ -37,7 +38,7 @@ def init_payment(request):
     tinkoff_payment = TinkoffPaymentInteraction(terminal, secret_key)
     payment_data = {
         "TerminalKey": terminal,
-        "Amount": float(total) * 100,
+        "Amount": int(float(total) * 100),
         "OrderId": order_id,
         "Description": f"Платеж на договор {account} сумма {total} руб.",
         "Currency": 643,
@@ -95,45 +96,46 @@ def recieve_payment(request):
     tinkoff_payment = TinkoffPaymentInteraction(terminal, secret_key)
     token = tinkoff_payment.get_token(request=data)
     if recieve_token == token and existing_payment:
-        amount_decimal = Decimal(amount) / 100
-        abonent = existing_payment.account
-        if status == 'AUTHORIZED' and amount_decimal == existing_payment.amount:
-            return HttpResponse('OK', content_type='text/plain')
-        if status == 'CONFIRMED' and amount_decimal == existing_payment.amount:
-            abonent.balance += amount_decimal
-            abonent.save()
-            PaymentTinkoff.objects.filter(payment_id=payment_id).update(
-                account=abonent,
-                status=status,
-                stamp=timezone.now()
-            )
-            UserEvent.objects.create(
-                    abonent=abonent,
-                    event=f"{amount_decimal} руб.",
-                    comment=f"Оплата тинькофф {amount_decimal} руб. id {payment_id}",
-                    new_balance=f"{abonent.balance} руб."
+        with transaction.atomic():
+            amount_decimal = Decimal(amount) / 100
+            abonent = existing_payment.account
+            if status == 'AUTHORIZED' and amount_decimal == existing_payment.amount:
+                return HttpResponse('OK', content_type='text/plain')
+            if status == 'CONFIRMED' and amount_decimal == existing_payment.amount:
+                abonent.balance += amount_decimal
+                abonent.save()
+                PaymentTinkoff.objects.filter(payment_id=payment_id).update(
+                    account=abonent,
+                    status=status,
+                    stamp=timezone.now()
                 )
-            return HttpResponse('OK', content_type='text/plain')
-        if status == 'REFUNDED' and amount_decimal == existing_payment.amount:
-            abonent.balance -= amount_decimal
-            abonent.save()
-            PaymentTinkoff.objects.filter(payment_id=payment_id).update(
-                account=abonent,
-                status=status,
-                stamp=timezone.now()
-            )
-            UserEvent.objects.create(
-                    abonent=abonent,
-                    event=f"{-amount_decimal} руб.",
-                    comment=f"Возврат тинькофф {amount_decimal} руб. id {payment_id}",
-                    new_balance=f"{abonent.balance} руб."
+                UserEvent.objects.create(
+                        abonent=abonent,
+                        event=f"{amount_decimal} руб.",
+                        comment=f"Оплата тинькофф {amount_decimal} руб. id {payment_id}",
+                        new_balance=f"{abonent.balance} руб."
+                    )
+                return HttpResponse('OK', content_type='text/plain')
+            if status == 'REFUNDED' and amount_decimal == existing_payment.amount:
+                abonent.balance -= amount_decimal
+                abonent.save()
+                PaymentTinkoff.objects.filter(payment_id=payment_id).update(
+                    account=abonent,
+                    status=status,
+                    stamp=timezone.now()
                 )
-            return HttpResponse('OK', content_type='text/plain')
-        if status == 'REJECTED' and amount_decimal == existing_payment.amount:
-            PaymentTinkoff.objects.filter(payment_id=payment_id).update(
-                account=abonent,
-                status=status,
-                stamp=timezone.now()
-            )
-            return HttpResponse('OK', content_type='text/plain')
+                UserEvent.objects.create(
+                        abonent=abonent,
+                        event=f"{-amount_decimal} руб.",
+                        comment=f"Возврат тинькофф {amount_decimal} руб. id {payment_id}",
+                        new_balance=f"{abonent.balance} руб."
+                    )
+                return HttpResponse('OK', content_type='text/plain')
+            if status == 'REJECTED' and amount_decimal == existing_payment.amount:
+                PaymentTinkoff.objects.filter(payment_id=payment_id).update(
+                    account=abonent,
+                    status=status,
+                    stamp=timezone.now()
+                )
+                return HttpResponse('OK', content_type='text/plain')
     return HttpResponse('Payment not confirmed or not found', content_type='text/plain', status=400)

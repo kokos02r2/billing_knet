@@ -81,6 +81,8 @@ def process_user(user, existing_users, existing_users_data, server_settings):
                 }
         if server_settings["remote_ip"]:
             params["remote_address"] = str(user.ip_addr)
+        elif str(user.ip_addr).startswith('193.0.'):
+            params["remote_address"] = str(user.ip_addr)
         if user_str in existing_users:
             if server_settings["remote_ip"] and not existing_users_data[user_str].get('remote-address'):
                 existing_users_data_id = existing_users_data[user_str].get('id')
@@ -193,26 +195,44 @@ def create_missing_profiles(server_settings):
 
 
 if __name__ == '__main__':
-    with ThreadPoolExecutor(max_workers=20) as executor:
-        futures = []
-        for server_name, server_settings in SERVERS.items():
-            future = executor.submit(create_missing_profiles, server_settings)
-            futures.append((server_name, future))
+    for server_name, server_settings in SERVERS.items():
+        try:
+            create_missing_profiles(server_settings)
+        except Exception as e:
+            error_message = f"Ошибка при добавлении пользователей на сервер {server_name}: {e}"
 
-        log_file_path = 'billing_knet/billing/utils/billing_scripts/logs/mikrotik_connection_errors.log'  # Укажите путь к вашему файлу лога
+            # Проверка, было ли уже залогировано такое же сообщение
+            if not is_message_logged('billing_knet/billing/utils/billing_scripts/logs/mikrotik_connection_errors.log', error_message):
+                logger.error(error_message)
+                bot_token = os.getenv('BOT_TOKEN')
+                chat_id = os.getenv('CHAT_ID')
+                send_telegram_message(bot_token, chat_id, error_message)
+            else:
+                # Если сообщение уже есть в логе, просто залогируйте факт его возникновения
+                logger.info(f"Повторное возникновение известной ошибки для сервера {server_name}. Сообщение не отправлено.")
 
-        for server_name, future in futures:
-            try:
-                future.result()
-            except Exception as e:
-                error_message = f"Ошибка при добавлении пользователей на сервер {server_name}: {e}"
 
-                # Проверьте, было ли уже залогировано такое же сообщение
-                if not is_message_logged(log_file_path, error_message):
-                    logger.error(error_message)
-                    bot_token = os.getenv('BOT_TOKEN')
-                    chat_id = os.getenv('CHAT_ID')
-                    send_telegram_message(bot_token, chat_id, error_message)
-                else:
-                    # Если сообщение уже есть в логе, просто залогируйте факт его возникновения
-                    logger.info(f"Повторное возникновение известной ошибки для сервера {server_name}. Сообщение не отправлено.")
+# if __name__ == '__main__':
+#     with ThreadPoolExecutor(max_workers=20) as executor:
+#         futures = []
+#         for server_name, server_settings in SERVERS.items():
+#             future = executor.submit(create_missing_profiles, server_settings)
+#             futures.append((server_name, future))
+
+#         log_file_path = 'billing_knet/billing/utils/billing_scripts/logs/mikrotik_connection_errors.log'  # Укажите путь к вашему файлу лога
+
+#         for server_name, future in futures:
+#             try:
+#                 future.result()
+#             except Exception as e:
+#                 error_message = f"Ошибка при добавлении пользователей на сервер {server_name}: {e}"
+
+#                 # Проверьте, было ли уже залогировано такое же сообщение
+#                 if not is_message_logged(log_file_path, error_message):
+#                     logger.error(error_message)
+#                     bot_token = os.getenv('BOT_TOKEN')
+#                     chat_id = os.getenv('CHAT_ID')
+#                     send_telegram_message(bot_token, chat_id, error_message)
+#                 else:
+#                     # Если сообщение уже есть в логе, просто залогируйте факт его возникновения
+#                     logger.info(f"Повторное возникновение известной ошибки для сервера {server_name}. Сообщение не отправлено.")

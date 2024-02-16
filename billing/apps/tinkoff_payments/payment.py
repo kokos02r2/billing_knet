@@ -27,7 +27,7 @@ class TinkoffPaymentInteraction:
                 **payload,
             },
         )
-
+       
         if response.status_code != 200:
             raise Exception(
                 f'Incorrect HTTP-status code for {method}: {response.status_code}',
@@ -48,12 +48,9 @@ class TinkoffPaymentInteraction:
         return str(value)
 
     def get_token(self, request: dict) -> str:
-
-        params = {k: v for k, v in request.items() if k not in ['Shops', 'DATA', 'Receipt', 'Token']}
-
+        params = {k: v for k, v in request.items() if k not in ['DATA', 'Receipt', 'Token']}
         params['Password'] = self.secret_key
-
         sorted_params = OrderedDict(
-            sorted((k, v) for k, v in params.items() if k not in ['Shops', 'DATA', 'Receipt', 'Token']),
+            sorted((k, v) for k, v in params.items() if k not in ['DATA', 'Receipt', 'Token']),
         )
         return sha256(''.join(self._normalize_value(value) for value in sorted_params.values()).encode()).hexdigest()

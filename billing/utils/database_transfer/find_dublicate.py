@@ -10,7 +10,7 @@ def check_unique_login(csv_filepath):
         duplicates = []
 
         for row in reader:
-            login = row[4]
+            login = row[9]
             if login in logins:
                 duplicates.append(login)
             else:

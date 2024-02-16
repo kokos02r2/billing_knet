@@ -5,68 +5,86 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SERVERS = {
-    # "Саваслейка": {
-    #     "host": os.getenv('IP_ADDRESS_SAVA'),
-    #     "username": os.getenv('LOGIN_SAVA'),
-    #     "password": os.getenv('PASSWORD'),
-    #     "port": int(os.getenv('PORT_UNIVERSAL'))
-    # },
-    # "Октябрьский_1": {
-    #     "host": os.getenv('IP_ADDRESS_OKT1'),
-    #     "username": os.getenv('LOGIN'),
-    #     "password": os.getenv('PASSWORD'),
-    #     "port": int(os.getenv('PORT_OKT1'))
-    # },
-    # "Октябрьский_2": {
-    #     "host": os.getenv('IP_ADDRESS_OKT2'),
-    #     "username": os.getenv('LOGIN_OKT2'),
-    #     "password": os.getenv('PASSWORD_OKT2'),
-    #     "port": int(os.getenv('PORT_OKT2'))
-    # },
-    # "ЧистоеБорское": {
-    #     "host": os.getenv('IP_ADDRESS_CHB'),
-    #     "username": os.getenv('LOGIN'),
-    #     "password": os.getenv('PASSWORD'),
-    #     "port": int(os.getenv('PORT_UNIVERSAL'))
-    # },
-    # "Лакша": {
-    #     "host": os.getenv('IP_ADDRESS_LAKSHA'),
-    #     "username": os.getenv('LOGIN'),
-    #     "password": os.getenv('PASSWORD'),
-    #     "port": int(os.getenv('PORT_UNIVERSAL'))
-    # },
-    # "Дуденево_1": {
-    #     "host": os.getenv('IP_ADDRESS_DUD1'),
-    #     "username": os.getenv('LOGIN'),
-    #     "password": os.getenv('PASSWORD'),
-    #     "port": int(os.getenv('PORT_UNIVERSAL'))
-    # },
-    # "Дуденево_2": {
-    #     "host": os.getenv('IP_ADDRESS_DUD2'),
-    #     "username": os.getenv('LOGIN'),
-    #     "password": os.getenv('PASSWORD'),
-    #     "port": int(os.getenv('PORT_UNIVERSAL'))
-    # },
-    # "Останкино": {
-    #     "host": os.getenv('IP_ADDRESS_OST'),
-    #     "username": os.getenv('LOGIN'),
-    #     "password": os.getenv('PASSWORD'),
-    #     "port": int(os.getenv('PORT_OST'))
-    # },
-    # "Боталово": {
-    #     "host": os.getenv('IP_ADDRESS_BOT'),
-    #     "username": os.getenv('LOGIN'),
-    #     "password": os.getenv('PASSWORD'),
-    #     "port": int(os.getenv('PORT_UNIVERSAL'))
-    # },
-    # "Большеорловское": {
-    #     "host": os.getenv('IP_ADDRESS_BO'),
-    #     "username": os.getenv('LOGIN'),
-    #     "password": os.getenv('PASSWORD'),
-    #     "port": int(os.getenv('PORT_TEST')),
-    #     "remote_ip": False,
-    #     "local_ip": "10.20.0.1",
-    # },
+    "Саваслейка": {
+        "host": os.getenv('IP_ADDRESS_SAVA'),
+        "username": os.getenv('LOGIN_SAVA'),
+        "password": os.getenv('PASSWORD'),
+        "port": int(os.getenv('PORT_UNIVERSAL')),
+        "remote_ip": False,
+        "local_ip": "10.13.0.1",
+    },
+    "Октябрьский_1": {
+        "host": os.getenv('IP_ADDRESS_OKT1'),
+        "username": os.getenv('LOGIN'),
+        "password": os.getenv('PASSWORD'),
+        "port": int(os.getenv('PORT_OKT1')),
+        "remote_ip": False,
+        "local_ip": "172.16.0.1"
+    },
+    "Октябрьский_2": {
+        "host": os.getenv('IP_ADDRESS_OKT2'),
+        "username": os.getenv('LOGIN_OKT2'),
+        "password": os.getenv('PASSWORD_OKT2'),
+        "port": int(os.getenv('PORT_OKT2')),
+        "remote_ip": False,
+        "local_ip": "172.16.0.1"
+    },
+    "ЧистоеБорское": {
+        "host": os.getenv('IP_ADDRESS_CHB'),
+        "username": os.getenv('LOGIN'),
+        "password": os.getenv('PASSWORD'),
+        "port": int(os.getenv('PORT_UNIVERSAL')),
+        "remote_ip": True,
+        "local_ip": "10.12.0.1",
+    },
+    "Лакша": {
+        "host": os.getenv('IP_ADDRESS_LAKSHA'),
+        "username": os.getenv('LOGIN'),
+        "password": os.getenv('PASSWORD'),
+        "port": int(os.getenv('PORT_UNIVERSAL')),
+        "remote_ip": True,
+        "local_ip": "10.20.0.1",
+    },
+    "Дуденево_1": {
+        "host": os.getenv('IP_ADDRESS_DUD1'),
+        "username": os.getenv('LOGIN'),
+        "password": os.getenv('PASSWORD'),
+        "port": int(os.getenv('PORT_UNIVERSAL')),
+        "remote_ip": True,
+        "local_ip": "10.12.0.1"
+    },
+    "Дуденево_2": {
+        "host": os.getenv('IP_ADDRESS_DUD2'),
+        "username": os.getenv('LOGIN'),
+        "password": os.getenv('PASSWORD'),
+        "port": int(os.getenv('PORT_UNIVERSAL')),
+        "remote_ip": False,
+        "local_ip": "10.14.0.1"
+    },
+    "Останкино": {
+        "host": os.getenv('IP_ADDRESS_OST'),
+        "username": os.getenv('LOGIN'),
+        "password": os.getenv('PASSWORD'),
+        "port": int(os.getenv('PORT_OST')),
+        "remote_ip": True,
+        "local_ip": "10.12.0.1"
+    },
+    "Боталово": {
+        "host": os.getenv('IP_ADDRESS_BOT'),
+        "username": os.getenv('LOGIN'),
+        "password": os.getenv('PASSWORD'),
+        "port": int(os.getenv('PORT_UNIVERSAL')),
+        "remote_ip": True,
+        "local_ip": "10.10.0.1"
+    },
+    "Большеорловское": {
+        "host": os.getenv('IP_ADDRESS_BO'),
+        "username": os.getenv('LOGIN'),
+        "password": os.getenv('PASSWORD'),
+        "port": int(os.getenv('PORT_TEST')),
+        "remote_ip": True,
+        "local_ip": "10.12.0.1",
+    },
     # "Test": {
     #     "host": os.getenv('IP_ADDRESS_TEST'),
     #     "username": os.getenv('LOGIN'),
