@@ -1,41 +1,41 @@
 # Billing KNet
 
-## Описание проекта
+## Project Description
 
-Billing KNet – это система управления биллингом, разработанная на Django. Она предоставляет API и веб-интерфейс для управления тарифами, расчетами и платежами пользователей.
+Billing KNet is a billing management system developed in Django. It provides an API and web interface for managing tariffs, calculations, and user payments.
 
-### Основные функции:
+### Key Features:
 
-- Управление пользователями и их тарифами
-- Автоматический расчет и перерасчет стоимости услуг
-- Генерация счетов и уведомлений
-- Интеграция с платежными системами
-- API для взаимодействия с внешними сервисами
+- User and tariff management
+- Automatic calculation and recalculation of service costs
+- Invoice and notification generation
+- Integration with payment systems
+- API for interaction with external services
 
-## Установка и настройка
+## Installation and Setup
 
-### Требования
+### Requirements
 
 - Python 3.9+
 - PostgreSQL
-- Poetry (для управления зависимостями)
+- Poetry (for dependency management)
 
-### Установка
+### Installation
 
-1. Клонируйте репозиторий:
+1. Clone the repository:
 
    ```bash
-   git clone <репозиторий>
+   git clone <repository>
    cd billing_knet-main
    ```
 
-2. Установите зависимости с помощью Poetry:
+2. Install dependencies using Poetry:
 
    ```bash
    poetry install
    ```
 
-3. Настройте переменные окружения (можно использовать `.env` файл):
+3. Configure environment variables (can use a `.env` file):
 
    ```
    DATABASE_URL=postgres://user:password@localhost:5432/billing_db
@@ -43,108 +43,108 @@ Billing KNet – это система управления биллингом, 
    DEBUG=True
    ```
 
-4. Примените миграции базы данных:
+4. Apply database migrations:
 
    ```bash
    poetry run python billing/manage.py migrate
    ```
 
-5. Создайте суперпользователя:
+5. Create a superuser:
 
    ```bash
    poetry run python billing/manage.py createsuperuser
    ```
 
-6. Заполните базу тестовыми данными (если требуется):
+6. Populate the database with test data (if required):
    ```bash
    poetry run python billing/manage.py loaddata initial_data.json
    ```
 
-## Запуск проекта
+## Running the Project
 
-1. Запустите сервер разработки:
+1. Start the development server:
 
    ```bash
    poetry run python billing/manage.py runserver
    ```
 
-2. Открывайте приложение по адресу `http://127.0.0.1:8000/`.
+2. Open the application at `http://127.0.0.1:8000/`.
 
 ## API
 
-### Основные эндпоинты:
+### Main Endpoints:
 
-- **Аутентификация:** `/api/auth/login/`, `/api/auth/logout/`
-- **Пользователи:** `/api/users/` – управление пользователями
-- **Тарифы:** `/api/tariffs/` – управление тарифами
-- **Счета:** `/api/bills/` – информация о платежах и счетах
+- **Authentication:** `/api/auth/login/`, `/api/auth/logout/`
+- **Users:** `/api/users/` – user management
+- **Tariffs:** `/api/tariffs/` – tariff management
+- **Invoices:** `/api/bills/` – payment and invoice information
 
-API поддерживает аутентификацию через JWT-токены. Для получения токена выполните:
+The API supports authentication via JWT tokens. To obtain a token, run:
 
 ```bash
 curl -X POST http://127.0.0.1:8000/api/auth/login/ -d '{"username": "admin", "password": "admin"}' -H "Content-Type: application/json"
 ```
 
-## Использование
+## Usage
 
-- Админ-панель: `http://127.0.0.1:8000/admin/`
-- API-документация: `http://127.0.0.1:8000/api/docs/` (если включен Swagger)
+- Admin Panel: `http://127.0.0.1:8000/admin/`
+- API Documentation: `http://127.0.0.1:8000/api/docs/` (if Swagger is enabled)
 
-## Структура проекта
+## Project Structure
 
 ```
 billing_knet-main/
 │── billing/
-│   ├── manage.py        # Точка входа Django
-│   ├── core/            # Основной модуль
-│   │   ├── settings.py  # Настройки Django
-│   │   ├── urls.py      # Маршруты
-│   │   ├── views.py     # Представления
-│   │   ├── helpers/     # Вспомогательные модули
-│   │   ├── tests/       # Тесты
-│── poetry.lock          # Зависимости проекта
-│── pyproject.toml       # Конфигурация Poetry
-│── setup.cfg            # Конфигурация пакета
-│── .gitignore           # Игнорируемые файлы
+│   ├── manage.py        # Django entry point
+│   ├── core/            # Main module
+│   │   ├── settings.py  # Django settings
+│   │   ├── urls.py      # Routing
+│   │   ├── views.py     # Views
+│   │   ├── helpers/     # Helper modules
+│   │   ├── tests/       # Tests
+│── poetry.lock          # Project dependencies
+│── pyproject.toml       # Poetry configuration
+│── setup.cfg            # Package configuration
+│── .gitignore           # Ignored files
 ```
 
-## Тестирование
+## Testing
 
-Для запуска тестов выполните:
+To run tests, execute:
 
 ```bash
 poetry run python billing/manage.py test
 ```
 
-## Развертывание
+## Deployment
 
-### Запуск через Gunicorn и Nginx
+### Running with Gunicorn and Nginx
 
-1. Установите Gunicorn:
+1. Install Gunicorn:
    ```bash
    poetry add gunicorn
    ```
-2. Запустите сервер Gunicorn:
+2. Start the Gunicorn server:
    ```bash
    poetry run gunicorn billing.core.wsgi:application --bind 0.0.0.0:8000
    ```
-3. Настройте Nginx для проксирования запросов к Gunicorn.
+3. Configure Nginx to proxy requests to Gunicorn.
 
-### Использование Docker
+### Using Docker
 
-1. Соберите Docker-образ:
+1. Build the Docker image:
    ```bash
    docker build -t billing_knet .
    ```
-2. Запустите контейнер:
+2. Run the container:
    ```bash
    docker run -p 8000:8000 --env-file .env billing_knet
    ```
 
-## Поддержка и развитие
+## Support and Development
 
-Если у вас есть вопросы или предложения, создайте issue в репозитории или свяжитесь с разработчиком.
+If you have any questions or suggestions, create an issue in the repository or contact the developer.
 
-## Лицензия
+## License
 
-Этот проект распространяется под лицензией MIT.
+This project is distributed under the MIT License.
